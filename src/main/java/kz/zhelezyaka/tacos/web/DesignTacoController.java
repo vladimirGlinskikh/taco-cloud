@@ -1,11 +1,15 @@
 package kz.zhelezyaka.tacos.web;
 
 import kz.zhelezyaka.tacos.Ingredient;
+import kz.zhelezyaka.tacos.Order;
 import kz.zhelezyaka.tacos.Taco;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
@@ -13,6 +17,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import kz.zhelezyaka.tacos.Ingredient.Type;
+
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
@@ -41,6 +47,12 @@ public class DesignTacoController {
         }
         model.addAttribute("design", new Taco());
         return "design";
+    }
+
+    @PostMapping
+    public String processDesign(Taco design) {
+        log.info("Processing design: " + design);
+        return "redirect:/orders/current";
     }
 
     private List<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
