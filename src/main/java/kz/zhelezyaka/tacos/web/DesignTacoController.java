@@ -3,14 +3,13 @@ package kz.zhelezyaka.tacos.web;
 import kz.zhelezyaka.tacos.Ingredient;
 import kz.zhelezyaka.tacos.Taco;
 import kz.zhelezyaka.tacos.data.IngredientRepository;
+import kz.zhelezyaka.tacos.data.TacoRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,11 +23,15 @@ import javax.validation.Valid;
 @Slf4j
 @Controller
 @RequestMapping("/design")
+@SessionAttributes("order")
 public class DesignTacoController {
     private final IngredientRepository ingredientRepo;
+    private TacoRepository designRepo;
 
-    public DesignTacoController(IngredientRepository ingredientRepo) {
+    @Autowired
+    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo) {
         this.ingredientRepo = ingredientRepo;
+        this.designRepo = designRepo;
     }
 
     @GetMapping
@@ -59,7 +62,7 @@ public class DesignTacoController {
 
     @PostMapping
     public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors errors) {
-        if (errors.hasErrors()){
+        if (errors.hasErrors()) {
             return "design";
         }
         log.info("Processing design: " + design);
